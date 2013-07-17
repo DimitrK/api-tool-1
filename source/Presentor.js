@@ -4,6 +4,7 @@ enyo.kind({
 	kind: null,
 	showInherited: false,
 	showProtected: false,
+	showSocialComments: false,
 	getByType: function(inObjects, inType) {
 		var result = [];
 		for (var i=0, o; (o=inObjects[i]); i++) {
@@ -82,7 +83,10 @@ enyo.kind({
 		return inComment ? "<comment>" + this.markupToHtml(inComment) + "</comment>" : "";
 	},
 	presentKind: function(inKind) {
-		return this.presentKindHeader(inKind) + this.presentKindSummary(inKind) + this.presentKindProperties(inKind);
+		return this.presentKindHeader(inKind) + 
+				this.presentKindSummary(inKind) + 
+				this.presentKindProperties(inKind) + 
+				this.presentSocialComments(inKind);
 	},
 	presentKindHeader: function(inKind) {
 		var html = '';
@@ -125,6 +129,13 @@ enyo.kind({
 	},
 	presentKindProperties: function(inKind) {
 		return this.presentProperties(this.showInherited ? inKind.allProperties : inKind.properties, inKind);
+	},
+	presentSocialComments: function(inKind) {
+		if (this.showSocialComments) {
+			return "<footer> The comments go here for " + inKind.name + "</footer>";
+		} else {
+			return undefined;
+		}
 	},
 	groupFilter: function(inProperties) {
 		return enyo.filter(inProperties, function(p) {

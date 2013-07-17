@@ -21,7 +21,8 @@ enyo.kind({
 		{name: "doc", kind: "FittableRows", fit: true, components: [
 			{name: "scope", components: [
 				{name: "inheritedCb", kind: "Checkbox", content: "show inherited", onchange: "scopeChange"},
-				{name: "accessCb", kind: "Checkbox", content: "show protected", style: "margin-left: 20px;", onchange: "accessChange"}
+				{name: "accessCb", kind: "Checkbox", content: "show protected", style: "margin-left: 20px;", onchange: "accessChange"},
+				{name: "commentsCb", kind: "Checkbox", content: "show community comments", style: "margin-left: 20px;", onchange: "commentsChange"}
 			]},
 			{name: "header", allowHtml: true},
 			{name: "tocFrame", kind: "Scroller", components: [
@@ -228,8 +229,12 @@ enyo.kind({
 		//
 		var body = this.presentor.presentKindSummary(inKind);
 		var pr$ = this.presentor.presentKindProperties(inKind);
+		var socialCom = this.presentor.presentSocialComments(inKind);
 		if (pr$) {
 			body += '<h3>Properties</h3>' + pr$;
+		}
+		if (socialCom) {
+			body += '<h3>Community</h3>' + socialCom;
 		}
 		this.$.body.setContent(body);
 		//
@@ -286,6 +291,11 @@ enyo.kind({
 	},
 	accessChange: function() {
 		this.presentor.showProtected = this.$.accessCb.getValue();
+		this.topicObject = null;
+		this.selectTopic(this.topic);
+	},
+	commentsChange: function() {
+		this.presentor.showSocialComments = this.$.commentsCb.getValue();
 		this.topicObject = null;
 		this.selectTopic(this.topic);
 	},
