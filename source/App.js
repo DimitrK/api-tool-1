@@ -30,7 +30,9 @@ enyo.kind({
 			]},
 			{name: "bodyFrame", kind: "Scroller", fit: true, classes: "enyo-selectable", components: [
 				{name: "indexBusy", kind: "Image", src: "assets/busy.gif", style: "padding-left: 8px;", showing: false},
-				{name: "body", allowHtml: true}
+				{name: "body", allowHtml: true},
+				{name: "sbody", allowHtml: true, components: [
+				]}
 			]}
 		]}
 	],
@@ -235,6 +237,7 @@ enyo.kind({
 		}
 		if (socialCom) {
 			body += '<h3>Community</h3>' + socialCom;
+			this.$.sbody.createComponent({kind: kind.View, source: inKind}, {owner: this});
 		}
 		this.$.body.setContent(body);
 		//
