@@ -237,7 +237,7 @@ enyo.kind({
 		}
 		if (socialCom) {
 			body += '<h3>Community</h3>' + socialCom;
-			this.$.sbody.createComponent({kind: kind.View, source: inKind}, {owner: this});
+			this.$.sbody.createComponent({kind: presentor.kind.View, source: inKind}, {owner: this});
 		}
 		this.$.body.setContent(body);
 		//

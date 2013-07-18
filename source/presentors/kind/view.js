@@ -1,13 +1,12 @@
-/* kind Presentor */
+/* Kind layout main view */
 enyo.kind({
-    name: "kind.View",
+    name: "presentor.kind.View",
     fit: true,
     kind: enyo.Control,
     published: {
         source: ""
     },
     components: [
-        {name: "container"}
     ],
     create: function() {
         this.inherited(arguments);
@@ -22,7 +21,14 @@ enyo.kind({
         }
     },
     present: function() {
-        this.$.container.createComponent({ kind: kind.header, source: this.getSource() }, {owner: this});
+        var sourceKind = this.getSource();
+        var components = [{ kind: presentor.kind.Header, source: sourceKind }];
+        if (sourceKind.comment) {
+            components.push({ kind: presentor.kind.Summary, source: sourceKind.comment });
+        }
+        components.push({ kind: api.Properties, source: sourceKind.properties });
+
+        this.createComponents(components, {owner: this});
         this.render();
     }
 });

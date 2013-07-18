@@ -1,6 +1,6 @@
 /* Kind view Presentor/Header */
 enyo.kind({
-    name: "kind.header",
+    name: "presentor.kind.Header",
     kind: enyo.Control,
     published: {
         source: ""
@@ -12,33 +12,40 @@ enyo.kind({
     ],
     create: function() {
         this.inherited(arguments);
-        var initialSource = this.getSource();
-        if (initialSource) {
-            this.presentFromSource(initialSource);
+        if (this.getSource()) {
+            this.present();
         }
     },
     sourceChanged: function(oldSource) {
-        var newSource = this.getSource();
-        if (oldSource != newSource) {
-            this.presentFromSource(newSource);
+        if (oldSource != this.getSource()) {
+            this.present();
         }
     },
-    presentFromSource: function(inSource) {
-        var superKindControls = [];
+    present: function() {
+        var source = this.getSource();
 
-        if (inSource.module && inSource.module.label) {
-            this.$.packageLabel.setContent(inSource.module.label);
+        if (source.module && source.module.label) {
+            this.$.packageLabel.setContent(source.module.label);
         }
         
-        this.$.kindName.setContent(inSource.name);
+        this.$.kindName.setContent(source.name);
         
+        if (source.superkinds.length) {
+            this.createInheritancePath(source);
+        }
+    },
+    createInheritancePath: function(inSource) {
+        // enyo.currentControl :: enyo.parentControl
+        var superKindControls = [{tag:"span", content:inSource.name}];
+
+
         enyo.forEach(inSource.superkinds, function(superkind){
-            superKindControls.push({ tag: "a", content: superkind, attributes: {
-                href: "#"+superkind
+            superKindControls.push({ tag: "a", content: " :: " + superkind, attributes: {
+                href: "#" + superkind
             } });
         });
 
-        this.$.inheritancePath.createComponents([superKindControls], {owner: this});
+        this.$.inheritancePath.createComponents(superKindControls, {owner: this});
     }
 
 
