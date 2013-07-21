@@ -2,9 +2,9 @@ enyo.kind({
     name: "api.helper",
     kind: enyo.Control,
     statics: {
-        groupFilter: function(inProperties) {
+        groupFilter: function(inProperties, showProtected) {
             return enyo.filter(inProperties, function(p) {
-                return p.name[0] !== "_" && (p.group == "public" || this.showProtected && p.group == "protected");
+                return p.name[0] !== "_" && (p.group == "public" || showProtected && p.group == "protected");
             }, this);
         },
 

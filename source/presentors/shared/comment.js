@@ -14,13 +14,17 @@ enyo.kind({
             this.present();
         }
     },
-    sourceChange: function(oldSource) {
+    sourceChanged: function(oldSource) {
         if (oldSource != this.getSource()) {
             this.present();
         }
     },
     present: function() {
-        this.$.comment.setContent(this.markupToHtml(this.getSource()));
+        this.reset();
+        this.$.comment.setContent(this.markupToHtml(this.getSource().comment));
+    },
+    reset: function() {
+        this.$.comment.setContent("");
     },
     markupToHtml: function(inMarkup) {
         /* global syntaxHighlight, Showdown */

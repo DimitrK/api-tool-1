@@ -22,6 +22,7 @@ enyo.kind({
         }
     },
     present: function() {
+        this.reset();
         var source = this.getSource();
 
         if (source.module && source.module.label) {
@@ -34,6 +35,12 @@ enyo.kind({
             this.createInheritancePath(source);
         }
     },
+    reset: function() {
+        this.$.packageLabel.setContent("");
+        this.$.kindName.setContent("");
+        this.$.inheritancePath.destroyComponents();
+        this.$.inheritancePath.destroyClientControls();
+    },
     createInheritancePath: function(inSource) {
         // enyo.currentControl :: enyo.parentControl
         var superKindControls = [{tag:"span", content:inSource.name}];
@@ -44,8 +51,8 @@ enyo.kind({
                 href: "#" + superkind
             } });
         });
-
         this.$.inheritancePath.createComponents(superKindControls, {owner: this});
+        this.$.inheritancePath.render();
     }
 
 

@@ -6,8 +6,8 @@ enyo.kind({
         source: ""
     },
     components: [
-        {tag: "h3", content: "Summary"},
-        {kind: api.Comment, name: "comment"}
+        {tag: "h3", name: "summaryHeader"},
+        {name: "summaryContainer", components:[] }
     ],
     create: function() {
         this.inherited(arguments);
@@ -15,13 +15,20 @@ enyo.kind({
             this.present();
         }
     },
-    sourceChange: function(oldSource) {
+    sourceChanged: function(oldSource) {
         if (oldSource != this.getSource()) {
             this.present();
         }
     },
     present: function() {
+        this.reset();
+        this.$.summaryHeader.setContent("Summary");
         var source = this.getSource();
-        this.$.comment.setSource(this.getSource);
+        this.$.summaryContainer.createComponent({kind: api.Comment, source: source}, {owner: this});
+    },
+    reset: function() {
+        this.$.summaryHeader.setContent("");
+        this.$.summaryContainer.destroyComponents();
+        this.$.summaryContainer.destroyClientControls();
     }
 });

@@ -1,5 +1,5 @@
 enyo.kind({
-    name: 'enyo.Disqus',
+    name: 'api.extra.Disqus',
     kind: enyo.Control,
     published: {
         shortname: 'pjetrsite'

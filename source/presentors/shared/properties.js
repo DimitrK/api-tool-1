@@ -4,28 +4,52 @@ enyo.kind({
     kind: enyo.Control,
     published: {
         source: "",
-        ownerkind: ""
+        properties: ""
     },
     components: [
-        
+        {tag:"h3", name: "propertiesHeader"},
+        {name: "propertiesContainer", components:[] }
     ],
     create: function() {
         this.inherited(arguments);
-        if (this.getSource()) {
+        if (this.getProperties()) {
             this.present();
         }
     },
-    sourceChange: function(oldSource) {
-        if (oldSource != this.getSource()) {
+    sourceChanged: function(oldSource) {
+        if (this.getSource() && oldSource != this.getSource()) {
+            this.present();
+        }
+    },
+    propertiesChanged: function(oldProperties) {
+        if (this.getProperties() && oldProperties != this.getProperties()) {
             this.present();
         }
     },
     present: function() {
-        var filteredProps = api.helper.groupFilter(this.getSource());
-        var ownerkind = this.getOwnerkind();
-        for (var i = 0, prop; (prop = filteredProps[i]); i++) {
-            this.createComponent({kind: api.Property, source: prop, ownerkind: ownerkind});
+        this.reset();
+        var filteredProps = this.getProperties();
+        var ownerkind = this.getSource();
+
+        if (ownerkind) {
+            this.$.propertiesHeader.setContent("Properties");
+
         }
 
+        for (var i = 0, prop; (prop = filteredProps[i]); i++) {
+            this.presentProperty(prop, ownerkind);
+        }
+
+        if (ownerkind) {
+            //this.$.propertiesContainer.createComponent({ kind: api.extra.Disqus, name: "disqus"});
+        }
+    },
+    reset: function() {
+        this.$.propertiesHeader.setContent("");
+        this.$.propertiesContainer.destroyComponents();
+        this.$.propertiesContainer.destroyClientControls();
+    },
+    presentProperty: function(inProperty, inKind) {
+        this.$.propertiesContainer.createComponent({kind: api.Property, property: inProperty, source: inKind}, {owner: this});
     }
 });

@@ -5,7 +5,9 @@ enyo.depends(
     "shared/expression.js",
     "shared/property.js",
     "shared/properties.js",
+    "shared/function.js",
     "kind",
-    "object",
-    "property"
+    "objects",
+    "property",
+    "controller.js"
     );

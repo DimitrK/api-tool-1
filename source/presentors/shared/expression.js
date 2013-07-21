@@ -1,3 +1,4 @@
+var api = api;
 enyo.kind({
     name: "api.Expression",
     kind: enyo.Control,
@@ -13,7 +14,7 @@ enyo.kind({
             this.present();
         }
     },
-    sourceChange: function(oldValue) {
+    sourceChanged: function(oldValue) {
         var newValue = this.getSource();
         if (oldValue != newValue && !!newValue) {
             this.present();
@@ -23,13 +24,13 @@ enyo.kind({
         var source = this.getSource();
 
         if (source.comment) {
-            this.createComponent({ kind: api.Comment, source: source.comment}, {owner: this});
+            this.createComponent({ kind: api.Comment, source: source}, {owner: this});
             return;
         }
 
         if (source.type == "block") {
             this.createComponents(this.getFormattedBlockComponents("{", "}"), { owner: this });
-            this.$.blockquote.createComponent({ kind: api.Properties, source: source}, {owner: this});
+            this.$.blockquote.createComponent({ kind: api.Properties, properties: source.properties}, {owner: this});
             return;
         }
 
@@ -39,7 +40,7 @@ enyo.kind({
             return;
         }
 
-        this.createComponent({content: source.token});
+        this.createComponent({tag:"span", content: source.token});
         return;
     },
     getFormattedBlockComponents: function(startString, endString) {

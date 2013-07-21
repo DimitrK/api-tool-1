@@ -13,7 +13,7 @@ enyo.kind({
             this.present();
         }
     },
-    sourceChange: function(oldValue) {
+    sourceChanged: function(oldValue) {
         var newValue = this.getSource();
         if (oldValue != newValue && !!newValue) {
             this.present();
@@ -23,8 +23,8 @@ enyo.kind({
         var props = this.getSource().properties;
         for (var i=0, p; (p=props[i]); i++) {
             this.createComponents([
-                { tag: "i", content: i },
-                { kind: api.Expression, source: p }
+                { tag: "i", content: i + ": " },
+                { tag: "span", kind: api.Expression, source: p }
             ], {owner: this});
         }
     }
