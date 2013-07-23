@@ -26,7 +26,7 @@ enyo.kind({
         ]},         
         {name: "bodyFrame", kind: "Scroller", fit: true, classes: "enyo-selectable", components: [
             {name: "indexBusy", kind: "Image", src: "assets/busy.gif", style: "padding-left: 8px;", showing: false},
-            {name: "body", classes: "api-body", components:[
+            {name: "body", fit:true, classes: "api-body", components:[
                 { kind: presentor.kind.Summary, name: "kindSummary"},
                 { kind: api.Properties, name: "kindProperties" },
                 { kind: presentor.objects.View, name: "objectsView" }
@@ -63,6 +63,25 @@ enyo.kind({
 
         this.$.kindProperties.setSource(inKind);
         this.$.kindProperties.setProperties(accessibleProps);
+
+        if (!this.$.body.$.disqus) {
+            this.$.body.createComponent({ 
+                kind: api.extra.Disqus, 
+                name: "disqus", 
+                disqus_identifier: inKind.module.label, 
+                shortname: "pjetrsite", 
+                disqus_title: inKind.module.label,
+                disqus_url: document.URL
+            });
+        } else {
+            this.$.body.$.disqus.setDisqus_identifier(inKind.module.label);
+            this.$.body.$.disqus.setDisqus_title(inKind.module.label);
+            //this.$.body.$.disqus.setDisqus_category_id("Kind");     
+            this.$.body.$.disqus.reset(inKind.module.label, document.URL);
+        }
+
+        //this.$.body.$.disqus.start();
+
         this.$.body.render();        
         this.reflow();
     },
@@ -71,6 +90,14 @@ enyo.kind({
         var accessibleObjects = api.helper.groupFilter(inObjects, this.showProtected);
         this.$.objectsHeader.setSource(accessibleObjects);
         this.$.objectsView.setSource(accessibleObjects);
+        if (!this.$.body.$.disqus) {
+            this.$.body.createComponent({ kind: api.extra.Disqus, name: "disqus", disqus_identifier: accessibleObjects[0].module.name, shortname: "pjetrsite", disqus_title: accessibleObjects[0].module.name});
+        } else {
+            this.$.body.$.disqus.setDisqus_identifier(accessibleObjects[0].module.name);
+            this.$.body.$.disqus.setDisqus_title(accessibleObjects[0].module.name);
+            //this.$.body.$.disqus.setDisqus_category_id("Object");            
+            this.$.body.$.disqus.reset(accessibleObjects[0].module.name, document.URL);
+        }
     },
     presentProperty: function(inProperty) {
         this.resetKind();
