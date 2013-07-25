@@ -94,3 +94,12 @@
 #app_body, .api-body {
 	padding: 8px;
 }
+
+
+
+.disqus-popup-info {
+	max-width: 25%;
+	word-wrap: break-word;
+	white-space: pre;
+
+}

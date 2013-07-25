@@ -1,4 +1,6 @@
-/* Kind presentors controler:: presentors/contorller.js */
+/* Kind presentors controller:: presentors/contorller.js */
+var api = api;
+var presentor = presentor;
 enyo.kind({
     name: "api.presentors.Controller",
     kind: enyo.Control,
@@ -36,6 +38,11 @@ enyo.kind({
     create: function() {
         this.inherited(arguments);
     },
+    rendered: function() {
+        if (this.showSocialComments) {
+            this.resetDisqus();
+        }
+    },
     presentObject: function(inObject) {
         switch (inObject.type) {
         case "module":
@@ -64,44 +71,39 @@ enyo.kind({
         this.$.kindProperties.setSource(inKind);
         this.$.kindProperties.setProperties(accessibleProps);
 
-        if (!this.$.body.$.disqus) {
-            this.$.body.createComponent({ 
-                kind: api.extra.Disqus, 
-                name: "disqus", 
-                disqus_identifier: inKind.module.label, 
-                shortname: "pjetrsite", 
-                disqus_title: inKind.module.label,
-                disqus_url: document.URL
-            });
-        } else {
-            this.$.body.$.disqus.setDisqus_identifier(inKind.module.label);
-            this.$.body.$.disqus.setDisqus_title(inKind.module.label);
-            //this.$.body.$.disqus.setDisqus_category_id("Kind");     
-            this.$.body.$.disqus.reset(inKind.module.label, document.URL);
-        }
-
-        //this.$.body.$.disqus.start();
-
-        this.$.body.render();        
+        this.$.bodyFrame.render();
         this.reflow();
+        this.resetDisqus();
     },
     presentObjects: function(inObjects) {
         this.resetKind();
         var accessibleObjects = api.helper.groupFilter(inObjects, this.showProtected);
         this.$.objectsHeader.setSource(accessibleObjects);
         this.$.objectsView.setSource(accessibleObjects);
-        if (!this.$.body.$.disqus) {
-            this.$.body.createComponent({ kind: api.extra.Disqus, name: "disqus", disqus_identifier: accessibleObjects[0].module.name, shortname: "pjetrsite", disqus_title: accessibleObjects[0].module.name});
-        } else {
-            this.$.body.$.disqus.setDisqus_identifier(accessibleObjects[0].module.name);
-            this.$.body.$.disqus.setDisqus_title(accessibleObjects[0].module.name);
-            //this.$.body.$.disqus.setDisqus_category_id("Object");            
-            this.$.body.$.disqus.reset(accessibleObjects[0].module.name, document.URL);
-        }
+        this.resetDisqus();
     },
     presentProperty: function(inProperty) {
         this.resetKind();
         this.$.kindProperties.createComponent({kind: api.Property, property: inProperty});
+    },
+    resetDisqus: function() {
+        if (this.$.body.$.disqus) {
+                this.$.body.$.disqus.setShowing(this.showSocialComments);
+        }
+        if (!this.showSocialComments) {    
+            return void(0);
+        }
+
+        var label = window.location.hash.replace("#","");
+        if (!this.$.body.$.disqus) {
+            this.$.body.createComponent({ 
+                kind: api.extra.Disqus, 
+                name: "disqus",
+                title: label});
+        } else {
+            this.$.body.$.disqus.setTitle(label);    
+            this.$.body.$.disqus.reset();
+        }
     },
     resetKind: function() {
         this.$.kindHeader.reset();
@@ -129,6 +131,7 @@ enyo.kind({
     commentsChange: function() {
         this.showSocialComments = this.$.commentsCb.getValue();
         this.$.body.container.setScrollTop(0);
+        this.resetDisqus();
         this.doReSelectTopic();
     },
     isBusyChanged: function(oldVal) {
