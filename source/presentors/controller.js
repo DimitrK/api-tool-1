@@ -87,9 +87,6 @@ enyo.kind({
         this.$.kindProperties.createComponent({kind: api.Property, property: inProperty});
     },
     resetDisqus: function() {
-        if (this.$.body.$.disqus) {
-                this.$.body.$.disqus.setShowing(this.showSocialComments);
-        }
         if (!this.showSocialComments) {    
             return void(0);
         }
@@ -99,7 +96,8 @@ enyo.kind({
             this.$.body.createComponent({ 
                 kind: api.extra.Disqus, 
                 name: "disqus",
-                title: label});
+                title: label
+            });
         } else {
             this.$.body.$.disqus.setTitle(label);    
             this.$.body.$.disqus.reset();
@@ -130,6 +128,7 @@ enyo.kind({
     },
     commentsChange: function() {
         this.showSocialComments = this.$.commentsCb.getValue();
+        this.$.commentsCb.setAttribute("disabled", true);
         this.$.body.container.setScrollTop(0);
         this.resetDisqus();
         this.doReSelectTopic();
