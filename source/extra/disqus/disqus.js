@@ -2,8 +2,8 @@ enyo.kind({
     name: 'api.extra.Disqus',
     kind: enyo.Control,
     published: {
-        shortname: "pjetrsite",
-        category_id: "2488265",
+        shortname: "pjetrsite", // SET THIS ACCORDING TO DISQUS ACCOUNT YOU CREATED FOR THE API-VIEWER
+        category_id: "2488265", // SET THIS ACCORDING TO THE CATEGORIES YOU CREATED IN YOUR ACCOUNT
         title: "",
         identifier: "",
         url: ""
@@ -67,9 +67,9 @@ enyo.kind({
      */
     reset: function(pageid, url) {
         // Start by checking if it tries to reset disqus with the same identifier.
-        if (window.location.hash.indexOf(this.getIdentifier()) != -1) {
+        /*if (window.location.hash.indexOf(this.getIdentifier()) != -1) {
             return;
-        }
+        }*/
 
         // Internally modified values. Need to update the module's published.
         this.createIdentifier(pageid);
